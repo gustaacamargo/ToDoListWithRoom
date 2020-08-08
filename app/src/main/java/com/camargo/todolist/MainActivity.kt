@@ -2,15 +2,13 @@ package com.camargo.todolist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.camargo.todolist.adapters.ToDoAdapter
 import com.camargo.todolist.adapters.ToDoListener
 import com.camargo.todolist.model.ToDo
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item.*
+import kotlinx.android.synthetic.main.item_edit.*
 
 class MainActivity : AppCompatActivity(), ToDoListener {
 
@@ -18,6 +16,7 @@ class MainActivity : AppCompatActivity(), ToDoListener {
     private var indexDaAtividadeSelecionada = 0;
     private var todoEdit: ToDo? = null
     private var statusBkp = ""
+    private var isEditing: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,14 +26,11 @@ class MainActivity : AppCompatActivity(), ToDoListener {
             insertItem()
         }
 
-
-
         adapter = ToDoAdapter(this, applicationContext)
         recycler_view.adapter = adapter
         recycler_view.layoutManager = LinearLayoutManager(this)
         recycler_view.setHasFixedSize(true)
 
-        reset()
     }
 
     fun insertItem() {
@@ -50,11 +46,8 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         todoEdit = newItem
 //        statusBkp = clickedItem.status
 //        clickedItem.status = "EDITANDO"
-        bt_save.setOnClickListener{
-            saveToDo()
-        }
+        isEditing = false
         adapter.notifyItemChanged(position)
-
     }
 
     fun saveToDo() {
@@ -64,39 +57,40 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         todoo.title = title_edit.text.toString()
         todoo.description = description_edit.text.toString()
 
-        Toast.makeText(this, "clicado", Toast.LENGTH_SHORT).show()
         adapter.save(todoo)
 
         val p = adapter.returnPositionOfToDo(todoo)
         adapter.notifyItemChanged(p)
-
+        isEditing = true
     }
 
     fun updateItem() {
         val clickedItem = adapter.getToDoInPosition(indexDaAtividadeSelecionada)
+        clickedItem.status = statusBkp
         clickedItem.title = title_edit.text.toString()
+        Toast.makeText(this, title_edit.text.toString(), Toast.LENGTH_SHORT).show()
         clickedItem.description = description_edit.text.toString()
 
         adapter.update(clickedItem)
         adapter.notifyItemChanged(indexDaAtividadeSelecionada)
 
-        reset()
+        isEditing = true
     }
 
-    fun removeItem() {
+
+    override fun onBtSaveClick() {
+        if(isEditing) {
+            updateItem()
+        }
+        else {
+            saveToDo()
+        }
+    }
+
+    override fun onBtDeleteClick(todo: ToDo) {
+        indexDaAtividadeSelecionada = adapter.returnPositionOfToDo(todo)
+
         adapter.removeToDoInPosition(indexDaAtividadeSelecionada)
-        reset()
-    }
-
-    fun reset() {
-//        title_text.text = Editable.Factory.getInstance().newEditable("")
-//        description_text.text = Editable.Factory.getInstance().newEditable("")
-//        add_bt.text = "Adicionar"
-//        add_bt.setOnClickListener {
-//            insertItem()
-//        }
-//        remove_bt.isClickable=false
-//        remove_bt.visibility= View.GONE
     }
 
     override fun onItemEditClick(todo: ToDo) {
@@ -104,24 +98,23 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         val clickedItem = adapter.getToDoInPosition(indexDaAtividadeSelecionada)
         clickedItem.status = statusBkp
         adapter.notifyItemChanged(indexDaAtividadeSelecionada)
+        isEditing = false
     }
 
     override fun onItemClick(todo: ToDo) {
         indexDaAtividadeSelecionada = adapter.returnPositionOfToDo(todo)
         val clickedItem = adapter.getToDoInPosition(indexDaAtividadeSelecionada)
         statusBkp = clickedItem.status
+        isEditing = true
         clickedItem.status = "EDITANDO"
-        //showEditCard()
-//        title_edit.text = Editable.Factory.getInstance().newEditable(clickedItem.title)
-//        description_edit.text = Editable.Factory.getInstance().newEditable(clickedItem.description)
 
-        bt_delete.setOnClickListener {
-            removeItem()
-        }
+//        bt_delete.setOnClickListener {
+//            removeItem()
+//        }
 
-        bt_save.setOnClickListener {
-            saveToDo()
-        }
+//        bt_save.setOnClickListener {
+//            saveToDo()
+//        }
 
         adapter.notifyItemChanged(indexDaAtividadeSelecionada)
     }

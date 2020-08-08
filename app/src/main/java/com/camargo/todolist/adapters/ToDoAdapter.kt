@@ -12,6 +12,10 @@ import com.camargo.todolist.database.AppDatabase
 import com.camargo.todolist.database.dao.ToDoDAO
 import com.camargo.todolist.model.ToDo
 import kotlinx.android.synthetic.main.item.view.*
+import kotlinx.android.synthetic.main.item_edit.view.bt_save
+import kotlinx.android.synthetic.main.item_edit.view.description_edit
+import kotlinx.android.synthetic.main.item_edit.view.title_edit
+import kotlinx.android.synthetic.main.item_edit.view.bt_delete
 
 class ToDoAdapter(
     private val listener: ToDoListener, context: Context
@@ -106,6 +110,14 @@ class ToDoAdapter(
         fun fillView(todo: ToDo) {
             itemView.title_edit.setText(todo.title)
             itemView.description_edit.setText(todo.description)
+
+            itemView.bt_save.setOnClickListener{
+                listener.onBtSaveClick()
+            }
+
+            itemView.bt_delete.setOnClickListener{
+                listener.onBtDeleteClick(todo)
+            }
 
             itemView.setOnClickListener {
                 listener.onItemEditClick(todo)

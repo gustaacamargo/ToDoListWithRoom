@@ -8,4 +8,8 @@ interface ToDoListener {
     fun onLongClick(todo: ToDo)
 
     fun onItemEditClick(todo: ToDo)
+
+    fun onBtSaveClick()
+
+    fun onBtDeleteClick(todo: ToDo)
 }
