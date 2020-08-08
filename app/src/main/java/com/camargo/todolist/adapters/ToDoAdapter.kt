@@ -1,10 +1,13 @@
 package com.camargo.todolist.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Paint
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.camargo.todolist.R
@@ -134,6 +137,9 @@ class ToDoAdapter(
         fun fillView(todo: ToDo) {
             itemView.textView1.text = Editable.Factory.getInstance().newEditable(todo.status + " " + todo.title)
             itemView.text_view_2.text = Editable.Factory.getInstance().newEditable(todo.description)
+            if(todo.status == "[FEITO]") {
+                itemView.textView1.paintFlags = itemView.textView1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            }
 
             itemView.setOnClickListener {
                 listener.onItemClick(todo)

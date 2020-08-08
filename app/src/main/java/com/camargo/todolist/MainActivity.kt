@@ -1,5 +1,6 @@
 package com.camargo.todolist
 
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -8,12 +9,13 @@ import com.camargo.todolist.adapters.ToDoAdapter
 import com.camargo.todolist.adapters.ToDoListener
 import com.camargo.todolist.model.ToDo
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item.*
 import kotlinx.android.synthetic.main.item_edit.*
 
 class MainActivity : AppCompatActivity(), ToDoListener {
 
     private lateinit var adapter: ToDoAdapter
-    private var indexDaAtividadeSelecionada = 0;
+    private var indexDaAtividadeSelecionada = 0
     private var todoEdit: ToDo? = null
     private var statusBkp = ""
     private var isEditing: Boolean = false
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity(), ToDoListener {
 
     }
 
-    fun insertItem() {
+    private fun insertItem() {
         val newItem = ToDo(
             "EDITANDO",
             "",
@@ -44,8 +46,6 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         (recycler_view.layoutManager as LinearLayoutManager).scrollToPosition(position)
 
         todoEdit = newItem
-//        statusBkp = clickedItem.status
-//        clickedItem.status = "EDITANDO"
         isEditing = false
         adapter.notifyItemChanged(position)
     }
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         isEditing = true
     }
 
-    fun updateItem() {
+    private fun updateItem() {
         val clickedItem = adapter.getToDoInPosition(indexDaAtividadeSelecionada)
         clickedItem.status = statusBkp
         clickedItem.title = title_edit.text.toString()
@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         val clickedItem = adapter.getToDoInPosition(indexDaAtividadeSelecionada)
         clickedItem.status = statusBkp
         adapter.notifyItemChanged(indexDaAtividadeSelecionada)
+        //textView1.text = clickedItem.title
         isEditing = false
     }
 
@@ -107,14 +108,6 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         statusBkp = clickedItem.status
         isEditing = true
         clickedItem.status = "EDITANDO"
-
-//        bt_delete.setOnClickListener {
-//            removeItem()
-//        }
-
-//        bt_save.setOnClickListener {
-//            saveToDo()
-//        }
 
         adapter.notifyItemChanged(indexDaAtividadeSelecionada)
     }
@@ -130,6 +123,7 @@ class MainActivity : AppCompatActivity(), ToDoListener {
             clickedItem.status = "[NÃO FEITO]"
         }
 
+        adapter.update(clickedItem)
         adapter.notifyItemChanged(indexDaAtividadeSelecionada)
     }
 
