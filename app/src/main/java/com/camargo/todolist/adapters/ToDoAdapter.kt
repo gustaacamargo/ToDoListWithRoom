@@ -139,6 +139,10 @@ class ToDoAdapter(
             itemView.text_view_2.text = Editable.Factory.getInstance().newEditable(todo.description)
             if(todo.status == "[FEITO]") {
                 itemView.textView1.paintFlags = itemView.textView1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                itemView.bt_share.visibility = View.VISIBLE
+            }
+            else {
+                itemView.bt_share.visibility = View.GONE
             }
 
             itemView.setOnClickListener {
