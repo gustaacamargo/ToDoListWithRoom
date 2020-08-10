@@ -1,5 +1,6 @@
 package com.camargo.todolist
 
+import android.content.Intent
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -86,6 +87,18 @@ class MainActivity : AppCompatActivity(), ToDoListener {
             saveToDo()
         }
     }
+
+    override fun onBtShareClick(todo: ToDo) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Oba! Acabei de concluir ${todo.title}")
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
 
     override fun onBtDeleteClick(todo: ToDo) {
         indexDaAtividadeSelecionada = adapter.returnPositionOfToDo(todo)

@@ -12,4 +12,7 @@ interface ToDoListener {
     fun onBtSaveClick()
 
     fun onBtDeleteClick(todo: ToDo)
+
+    fun onBtShareClick(todo: ToDo)
+
 }

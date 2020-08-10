@@ -149,6 +149,10 @@ class ToDoAdapter(
                 listener.onItemClick(todo)
             }
 
+            itemView.bt_share.setOnClickListener {
+                listener.onBtShareClick(todo)
+            }
+
             itemView.setOnLongClickListener {
                 listener.onLongClick(todo)
                 true
