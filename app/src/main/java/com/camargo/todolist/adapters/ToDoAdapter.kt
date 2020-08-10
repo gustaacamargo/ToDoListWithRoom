@@ -1,6 +1,7 @@
 package com.camargo.todolist.adapters
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Paint
 import android.text.Editable
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.res.TypedArrayUtils
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.camargo.todolist.R
@@ -28,6 +30,7 @@ class ToDoAdapter(
     private var toDoList: MutableList<ToDo> = mutableListOf<ToDo>()
     private val EDIT_ITEM = 0
     private val NORMAL_ITEM = 1
+    private val c: Context = context
 
     init {
         val db = Room.databaseBuilder(
@@ -135,15 +138,20 @@ class ToDoAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun fillView(todo: ToDo) {
-            itemView.textView1.text = Editable.Factory.getInstance().newEditable(todo.status + " " + todo.title)
-            itemView.text_view_2.text = Editable.Factory.getInstance().newEditable(todo.description)
-            if(todo.status == "[FEITO]") {
+            val done: String =  c.getString(R.string.done)
+
+            if(todo.status == done) {
                 itemView.textView1.paintFlags = itemView.textView1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 itemView.bt_share.visibility = View.VISIBLE
             }
             else {
+                itemView.textView1.paintFlags = Paint.ANTI_ALIAS_FLAG
                 itemView.bt_share.visibility = View.GONE
             }
+
+            itemView.textView1.text = Editable.Factory.getInstance().newEditable(todo.status + " " + todo.title)
+            itemView.text_view_2.text = Editable.Factory.getInstance().newEditable(todo.description)
+
 
             itemView.setOnClickListener {
                 listener.onItemClick(todo)

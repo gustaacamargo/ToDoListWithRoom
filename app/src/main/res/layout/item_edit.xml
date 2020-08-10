@@ -19,7 +19,7 @@
             android:layout_marginTop="2dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
+            android:text="@string/title"
             android:visibility="visible"
             app:layout_constraintEnd_toStartOf="@+id/bt_delete"
             app:layout_constraintStart_toStartOf="parent"

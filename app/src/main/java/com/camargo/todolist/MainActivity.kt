@@ -1,7 +1,6 @@
 package com.camargo.todolist
 
 import android.content.Intent
-import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -53,8 +52,9 @@ class MainActivity : AppCompatActivity(), ToDoListener {
 
     fun saveToDo() {
         val todoo = todoEdit as ToDo
+        val notDone: String = getString(R.string.not_done)
 
-        todoo.status = "[NÃO FEITO]"
+        todoo.status = notDone
         todoo.title = title_edit.text.toString()
         todoo.description = description_edit.text.toString()
 
@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity(), ToDoListener {
         val clickedItem = adapter.getToDoInPosition(indexDaAtividadeSelecionada)
         clickedItem.status = statusBkp
         clickedItem.title = title_edit.text.toString()
-        Toast.makeText(this, title_edit.text.toString(), Toast.LENGTH_SHORT).show()
         clickedItem.description = description_edit.text.toString()
 
         adapter.update(clickedItem)
@@ -89,9 +88,11 @@ class MainActivity : AppCompatActivity(), ToDoListener {
     }
 
     override fun onBtShareClick(todo: ToDo) {
+        val textShare: String = getString(R.string.text_share)
+
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, "Oba! Acabei de concluir ${todo.title}")
+            putExtra(Intent.EXTRA_TEXT, "${textShare} ${todo.title}")
             type = "text/plain"
         }
 
@@ -128,12 +129,14 @@ class MainActivity : AppCompatActivity(), ToDoListener {
     override fun onLongClick(todo: ToDo) {
         indexDaAtividadeSelecionada = adapter.returnPositionOfToDo(todo)
         val clickedItem = adapter.getToDoInPosition(indexDaAtividadeSelecionada)
+        val notDone: String = getString(R.string.not_done)
+        val done: String = getString(R.string.done)
 
-        if(clickedItem.status == "[NÃO FEITO]") {
-            clickedItem.status = "[FEITO]"
+        if(clickedItem.status == notDone) {
+            clickedItem.status = done
         }
-        else if(clickedItem.status == "[FEITO]") {
-            clickedItem.status = "[NÃO FEITO]"
+        else if(clickedItem.status == done) {
+            clickedItem.status = notDone
         }
 
         adapter.update(clickedItem)
